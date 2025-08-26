@@ -1,5 +1,4 @@
-//	Write a program to find sum of every row and every column in a two-dimensional array.  
-#include<iostream>
+ #include<iostream>
 using namespace std;
 
 void displayMatrix(const int arr[][3], int r, int c){
@@ -30,7 +29,6 @@ void findSum(const int arr[][3], int r, int c){
         } 
     }
 
-    // Display results
     cout << "\nRow sums: ";
     for (int i = 0; i < r; i++)
         cout << rowSum[i] << " ";

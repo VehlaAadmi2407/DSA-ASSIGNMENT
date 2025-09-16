@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+
+class CircularQueue {
+    int *arr;
+    int front, rear, size, capacity;
+public:
+    CircularQueue(int c) {
+        capacity = c;
+        arr = new int[c];
+        front = -1;
+        rear = -1;
+        size = 0;
+    }
+    bool isEmpty() {
+        return size == 0;
+    }
+    bool isFull() {
+        return size == capacity;
+    }
+    void enqueue(int x) {
+        if (isFull()) {
+            cout << "Queue is Full\n";
+            return;
+        }
+        if (front == -1) front = 0;
+        rear = (rear + 1) % capacity;
+        arr[rear] = x;
+        size++;
+    }
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is Empty\n";
+            return -1;
+        }
+        int x = arr[front];
+        if (front == rear) {
+            front = rear = -1;
+            size = 0;
+        } else {
+            front = (front + 1) % capacity;
+            size--;
+        }
+        return x;
+    }
+    int peek() {
+        if (isEmpty()) {
+            cout << "Queue is Empty\n";
+            return -1;
+        }
+        return arr[front];
+    }
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is Empty\n";
+            return;
+        }
+        int i = front;
+        for (int count = 0; count < size; count++) {
+            cout << arr[i] << " ";
+            i = (i + 1) % capacity;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    int c;
+    cout << "Enter size of circular queue: ";
+    cin >> c;
+    CircularQueue q(c);
+    while (true) {
+        cout << "\n1.Enqueue 2.Dequeue 3.Peek 4.Display 5.Exit\n";
+        int ch;
+        cin >> ch;
+        if (ch == 1) {
+            int x;
+            cout << "Enter item: ";
+            cin >> x;
+            q.enqueue(x);
+        } else if (ch == 2) {
+            cout << "Dequeued: " << q.dequeue() << endl;
+        } else if (ch == 3) {
+            cout << "Front element: " << q.peek() << endl;
+        } else if (ch == 4) {
+            q.display();
+        } else if (ch == 5) {
+            break;
+        } else {
+            cout << "Invalid choice\n";
+        }
+    }
+    return 0;
+}

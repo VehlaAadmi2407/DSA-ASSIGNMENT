@@ -1,0 +1,91 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+class SinglyLinkedList {
+    Node* head;
+public:
+    SinglyLinkedList() { head = nullptr; }
+
+    void insertAtEnd(int x) {
+        Node* newNode = new Node{ x, nullptr };
+        if (!head) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next) temp = temp->next;
+        temp->next = newNode;
+    }
+
+    int countKey(int key) {
+        Node* temp = head;
+        int count = 0;
+        while (temp) {
+            if (temp->data == key) count++;
+            temp = temp->next;
+        }
+        return count;
+    }
+
+    void deleteKey(int key) {
+        while (head && head->data == key) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+        Node* temp = head;
+        while (temp && temp->next) {
+            if (temp->next->data == key) {
+                Node* delNode = temp->next;
+                temp->next = delNode->next;
+                delete delNode;
+            } else {
+                temp = temp->next;
+            }
+        }
+    }
+
+    void display() {
+        if (!head) {
+            cout << "List is empty.\n";
+            return;
+        }
+        Node* temp = head;
+        while (temp) {
+            cout << temp->data;
+            if (temp->next) cout << "->";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    SinglyLinkedList list;
+    int n, val, key;
+
+    cout << "Enter number of elements: ";
+    cin >> n;
+    cout << "Enter elements: ";
+    for (int i = 0; i < n; i++) {
+        cin >> val;
+        list.insertAtEnd(val);
+    }
+
+    cout << "Enter key to count and delete: ";
+    cin >> key;
+
+    int count = list.countKey(key);
+    cout << "Count: " << count << endl;
+
+    list.deleteKey(key);
+    cout << "Updated Linked List: ";
+    list.display();
+
+    return 0;
+}

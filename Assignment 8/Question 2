@@ -1,0 +1,150 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+    Node(int value) {
+        data = value;
+        left = right = nullptr;
+    }
+};
+
+Node* insert(Node* root, int value) {
+    if (root == nullptr)
+        return new Node(value);
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+    return root;
+}
+
+Node* searchRecursive(Node* root, int key) {
+    if (root == nullptr || root->data == key)
+        return root;
+    if (key < root->data)
+        return searchRecursive(root->left, key);
+    else
+        return searchRecursive(root->right, key);
+}
+
+Node* searchIterative(Node* root, int key) {
+    while (root != nullptr) {
+        if (root->data == key)
+            return root;
+        else if (key < root->data)
+            root = root->left;
+        else
+            root = root->right;
+    }
+    return nullptr;
+}
+
+Node* findMin(Node* root) {
+    while (root && root->left != nullptr)
+        root = root->left;
+    return root;
+}
+
+Node* findMax(Node* root) {
+    while (root && root->right != nullptr)
+        root = root->right;
+    return root;
+}
+
+Node* inorderSuccessor(Node* root, Node* target) {
+    if (target->right != nullptr)
+        return findMin(target->right);
+    Node* successor = nullptr;
+    while (root != nullptr) {
+        if (target->data < root->data) {
+            successor = root;
+            root = root->left;
+        } else if (target->data > root->data)
+            root = root->right;
+        else
+            break;
+    }
+    return successor;
+}
+
+Node* inorderPredecessor(Node* root, Node* target) {
+    if (target->left != nullptr)
+        return findMax(target->left);
+    Node* predecessor = nullptr;
+    while (root != nullptr) {
+        if (target->data > root->data) {
+            predecessor = root;
+            root = root->right;
+        } else if (target->data < root->data)
+            root = root->left;
+        else
+            break;
+    }
+    return predecessor;
+}
+
+void inorder(Node* root) {
+    if (root == nullptr)
+        return;
+    inorder(root->left);
+    cout << root->data << " ";
+    inorder(root->right);
+}
+
+int main() {
+    Node* root = nullptr;
+    int n, value;
+    cout << "Enter number of nodes: ";
+    cin >> n;
+    cout << "Enter node values: ";
+    for (int i = 0; i < n; i++) {
+        cin >> value;
+        root = insert(root, value);
+    }
+
+    cout << "Inorder Traversal: ";
+    inorder(root);
+    cout << endl;
+
+    int key;
+    cout << "\nEnter key to search: ";
+    cin >> key;
+
+    Node* res1 = searchRecursive(root, key);
+    if (res1)
+        cout << "Found (Recursive): " << res1->data << endl;
+    else
+        cout << "Not found (Recursive)\n";
+
+    Node* res2 = searchIterative(root, key);
+    if (res2)
+        cout << "Found (Iterative): " << res2->data << endl;
+    else
+        cout << "Not found (Iterative)\n";
+
+    Node* minNode = findMin(root);
+    Node* maxNode = findMax(root);
+    cout << "\nMinimum Element: " << minNode->data << endl;
+    cout << "Maximum Element: " << maxNode->data << endl;
+
+    Node* target = searchIterative(root, key);
+    if (target) {
+        Node* succ = inorderSuccessor(root, target);
+        Node* pred = inorderPredecessor(root, target);
+        if (succ)
+            cout << "Inorder Successor of " << key << " = " << succ->data << endl;
+        else
+            cout << "No Inorder Successor for " << key << endl;
+        if (pred)
+            cout << "Inorder Predecessor of " << key << " = " << pred->data << endl;
+        else
+            cout << "No Inorder Predecessor for " << key << endl;
+    } else {
+        cout << "\nKey not found, cannot find successor or predecessor.\n";
+    }
+
+    return 0;
+}

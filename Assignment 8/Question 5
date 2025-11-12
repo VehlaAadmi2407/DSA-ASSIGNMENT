@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+    Node(int value) {
+        data = value;
+        left = right = nullptr;
+    }
+};
+
+struct Stack {
+    Node* arr[100];
+    int top;
+    Stack() { top = -1; }
+    bool isEmpty() { return top == -1; }
+    void push(Node* node) { arr[++top] = node; }
+    Node* pop() { return arr[top--]; }
+    Node* peek() { return arr[top]; }
+};
+
+Node* insert(Node* root, int value) {
+    if (root == nullptr)
+        return new Node(value);
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+    return root;
+}
+
+void inorderNonRecursive(Node* root) {
+    Stack s;
+    Node* current = root;
+
+    while (current != nullptr || !s.isEmpty()) {
+        while (current != nullptr) {
+            s.push(current);
+            current = current->left;
+        }
+
+        current = s.pop();
+        cout << current->data << " ";
+        current = current->right;
+    }
+}
+
+int main() {
+    Node* root = nullptr;
+    root = insert(root, 50);
+    root = insert(root, 30);
+    root = insert(root, 70);
+    root = insert(root, 20);
+    root = insert(root, 40);
+    root = insert(root, 60);
+    root = insert(root, 80);
+
+    cout << "Inorder Traversal (Non-Recursive): ";
+    inorderNonRecursive(root);
+    cout << endl;
+
+    return 0;
+}

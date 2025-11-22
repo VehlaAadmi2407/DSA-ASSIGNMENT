@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 struct Node{
     int val;
@@ -22,5 +22,5 @@ int main(){
     cout<<(loop?"true":"false");
 }
 
-//output
-true
+return 0;
+}
